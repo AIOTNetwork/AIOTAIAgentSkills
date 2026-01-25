@@ -1,0 +1,19 @@
+{
+  "name": "aiot-skills",
+  "owner": {
+    "name": "AIOTNetwork",
+    "url": "https://github.com/AIOTNetwork"
+  },
+  "plugins": [
+    {
+      "name": "aiot-ai-agent-skills",
+      "source": "./",
+      "description": "AI-powered git workflow skills: smart commits, auto-changelog, pre-commit hooks, and semantic versioning",
+      "version": "1.2.0",
+      "author": {
+        "name": "AIOTNetwork"
+      },
+      "license": "MIT"
+    }
+  ]
+}

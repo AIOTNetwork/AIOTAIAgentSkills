@@ -1,0 +1,22 @@
+{
+  "name": "aiot-ai-agent-skills",
+  "version": "1.2.0",
+  "description": "A collection of Claude Code skills for AI-assisted development workflows",
+  "author": {
+    "name": "AIOTNetwork",
+    "url": "https://github.com/AIOTNetwork"
+  },
+  "homepage": "https://github.com/AIOTNetwork/AIOTAIAgentSkills",
+  "repository": "https://github.com/AIOTNetwork/AIOTAIAgentSkills",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "skills",
+    "git",
+    "commits",
+    "angular-convention",
+    "devops"
+  ],
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json"
+}
