@@ -92,9 +92,27 @@ refactor(core): extract validation logic into separate module
 BREAKING CHANGE: rename authToken to accessToken in config
 ```
 
-## Auto-Trigger Hook
+## Auto-Trigger Hooks
 
-The plugin includes a pre-commit hook that automatically runs when Claude detects a `git commit` command. It will:
+### Prompt-Based Trigger
+
+The plugin automatically triggers the `/smart-commit` skill when your prompt contains commit-related keywords:
+
+- `commit`
+- `commits`
+- `committing`
+
+**Examples that will auto-trigger:**
+```
+"commit my changes"
+"help me commit this"
+"I want to commit"
+"create a commit for these changes"
+```
+
+### Pre-Commit Check
+
+The plugin also includes a pre-commit hook that automatically runs when Claude executes a `git commit` command. It will:
 
 1. Detect staged files
 2. Run pre-commit checks (lint, format) based on project type

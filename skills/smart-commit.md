@@ -215,6 +215,8 @@ EOF
 )"
 ```
 
+**IMPORTANT:** Do NOT add "Co-Authored-By: Claude" or any AI attribution footer to commits created by this skill. The commit message should only contain the type, scope, subject, body, and standard footers (BREAKING CHANGE, issue references).
+
 Repeat for each commit in order.
 
 ### Step 6: Verify Success
