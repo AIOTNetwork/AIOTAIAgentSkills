@@ -1,5 +1,5 @@
 ---
-description: AI-powered git workflow assistant. Generates conventional commit messages, auto-updates CHANGELOG.md, runs pre-commit checks (lint, format, test), and suggests semantic version bumps. Use for commit creation, changelog updates, pre-commit validation, and release management.
+description: AI-powered git workflow assistant. Generates conventional commit messages and runs pre-commit checks (lint, format, test). Use for commit creation and pre-commit validation.
 ---
 
 # Smart Commit Skill
@@ -7,9 +7,7 @@ description: AI-powered git workflow assistant. Generates conventional commit me
 This skill provides an intelligent git workflow assistant with the following capabilities:
 
 - **Smart Commits**: Analyzes staged changes and creates atomic, well-formatted commits following the [Angular Commit Message Convention](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit)
-- **Auto-Changelog**: Generates and updates CHANGELOG.md based on commit history
 - **Pre-Commit Hooks**: Runs linters, formatters, and tests before committing
-- **Version Bump**: Suggests semantic version bumps based on commit types
 
 ## Commit Message Format
 
@@ -226,73 +224,6 @@ git log --oneline -n [N]
 git status
 ```
 
-## Workflow: Auto-Changelog
-
-When asked to update changelog or after commits:
-
-### Step 1: Analyze Commits Since Last Release
-
-```bash
-# Get last tag
-git describe --tags --abbrev=0 2>/dev/null || echo "No tags found"
-
-# Get commits since last tag (or all commits if no tag)
-git log $(git describe --tags --abbrev=0 2>/dev/null || git rev-list --max-parents=0 HEAD)..HEAD --oneline
-```
-
-### Step 2: Categorize Changes by Type
-
-Group commits into changelog sections:
-
-| Commit Type | Changelog Section |
-|-------------|-------------------|
-| `feat`      | Added             |
-| `fix`       | Fixed             |
-| `perf`      | Performance       |
-| `docs`      | Documentation     |
-| `refactor`  | Changed           |
-| `build`     | Build             |
-| `ci`        | CI/CD             |
-| `test`      | Tests             |
-| `BREAKING`  | Breaking Changes  |
-
-### Step 3: Generate Changelog Entry
-
-Follow [Keep a Changelog](https://keepachangelog.com/) format:
-
-```markdown
-## [Unreleased]
-
-### Breaking Changes
-- Description of breaking change with migration steps
-
-### Added
-- New feature description (#issue)
-
-### Fixed
-- Bug fix description (#issue)
-
-### Changed
-- Refactoring or modification description
-
-### Performance
-- Performance improvement description
-```
-
-### Step 4: Update CHANGELOG.md
-
-1. Check if CHANGELOG.md exists, create if not
-2. Insert new entry after the header
-3. Preserve existing entries
-4. Update [Unreleased] link if using comparison URLs
-
-### Step 5: Offer to Commit Changelog
-
-```
-Changelog updated. Would you like to commit this change?
-Suggested: docs(changelog): update changelog for upcoming release
-```
-
 ## Workflow: Pre-Commit Hooks
 
 When asked to set up or run pre-commit checks:
@@ -417,119 +348,6 @@ echo "Pre-commit checks passed!"
 EOF
 
 chmod +x .git/hooks/pre-commit
-```
-
-## Workflow: Version Bump
-
-When asked to bump version or after significant changes:
-
-### Step 1: Analyze Commits for Version Impact
-
-```bash
-# Get commits since last tag
-git log $(git describe --tags --abbrev=0 2>/dev/null)..HEAD --oneline
-```
-
-Determine bump type based on commits:
-
-| Commit Pattern | Version Bump |
-|----------------|--------------|
-| `BREAKING CHANGE` in footer | **MAJOR** (x.0.0) |
-| `feat:` or `feat(scope):` | **MINOR** (0.x.0) |
-| `fix:`, `perf:`, `refactor:` | **PATCH** (0.0.x) |
-| `docs:`, `style:`, `test:`, `ci:` | No bump (or patch) |
-
-### Step 2: Get Current Version
-
-```bash
-# From package.json
-node -p "require('./package.json').version" 2>/dev/null
-
-# From pyproject.toml
-grep -m1 'version' pyproject.toml | cut -d'"' -f2
-
-# From Cargo.toml
-grep -m1 'version' Cargo.toml | cut -d'"' -f2
-
-# From git tags
-git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//'
-```
-
-### Step 3: Calculate New Version
-
-Apply semantic versioning rules:
-
-```
-Current: 1.2.3
-
-MAJOR bump → 2.0.0 (breaking changes)
-MINOR bump → 1.3.0 (new features)
-PATCH bump → 1.2.4 (bug fixes)
-```
-
-### Step 4: Present Recommendation
-
-```
-## Version Bump Recommendation
-
-**Current version:** 1.2.3
-**Recommended bump:** MINOR → 1.3.0
-
-### Reason:
-- 2 new features (`feat`)
-- 1 bug fix (`fix`)
-- No breaking changes
-
-### Commits included:
-- feat(auth): add OAuth2 support
-- feat(api): add rate limiting
-- fix(db): resolve connection leak
-
-Would you like to:
-1. Apply recommended bump (1.3.0)
-2. Choose a different version
-3. Skip version bump
-```
-
-### Step 5: Apply Version Bump
-
-**Node.js:**
-```bash
-npm version minor --no-git-tag-version
-# Or with tag: npm version minor -m "chore(release): v%s"
-```
-
-**Python (pyproject.toml):**
-```bash
-# Update version in pyproject.toml
-sed -i 's/version = ".*"/version = "1.3.0"/' pyproject.toml
-```
-
-**Rust:**
-```bash
-# Update version in Cargo.toml
-sed -i 's/^version = ".*"/version = "1.3.0"/' Cargo.toml
-```
-
-### Step 6: Create Release Commit and Tag
-
-```bash
-git add package.json  # or pyproject.toml, Cargo.toml
-git commit -m "chore(release): bump version to 1.3.0"
-git tag -a v1.3.0 -m "Release v1.3.0"
-```
-
-### Step 7: Offer Next Steps
-
-```
-Version bumped to 1.3.0
-
-Next steps:
-1. Update CHANGELOG.md (run /smart-commit changelog)
-2. Push changes: git push && git push --tags
-3. Create GitHub release (optional)
-
-Would you like me to help with any of these?
 ```
 
 ## Edge Cases

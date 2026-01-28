@@ -36,14 +36,12 @@ cp -r skills/* /path/to/your/project/.claude/skills/
 
 ### `/smart-commit`
 
-AI-powered git workflow assistant. Generates conventional commit messages, auto-updates changelogs, runs pre-commit checks, and suggests semantic version bumps.
+AI-powered git workflow assistant. Generates conventional commit messages and runs pre-commit checks.
 
 **Features:**
 
 - **Smart Commits**: Analyzes staged changes and suggests atomic commits following Angular convention
-- **Auto-Changelog**: Generates CHANGELOG.md entries from commit history
 - **Pre-Commit Hooks**: Runs linters, formatters, type checks before committing
-- **Version Bump**: Suggests semver bumps (major/minor/patch) based on commit types
 - **Edge Cases**: Handles merge conflicts, sensitive files, WIP code
 
 **Usage:**
@@ -52,9 +50,7 @@ AI-powered git workflow assistant. Generates conventional commit messages, auto-
 /smart-commit              # Review staged changes, then offer to commit
 /smart-commit review       # Analyze and suggest splits only
 /smart-commit commit       # Auto-commit with generated messages
-/smart-commit changelog    # Update CHANGELOG.md from commits
 /smart-commit precommit    # Run pre-commit checks (lint, format, test)
-/smart-commit version      # Suggest and apply version bump
 ```
 
 **Commit Message Format:**
