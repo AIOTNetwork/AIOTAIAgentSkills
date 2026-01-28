@@ -127,7 +127,8 @@ AIOTAIAgentSkills/
 │   ├── hooks.json           # Hook configuration
 │   └── pre-commit-check.sh  # Pre-commit check script
 ├── skills/
-│   └── smart-commit.md      # Smart commit skill
+│   └── smart-commit/
+│       └── SKILL.md         # Smart commit skill
 ├── LICENSE
 ├── CHANGELOG.md
 └── README.md

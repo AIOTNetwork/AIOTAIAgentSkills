@@ -1,5 +1,8 @@
 ---
+name: smart-commit
 description: AI-powered git workflow assistant. Generates conventional commit messages and runs pre-commit checks (lint, format, test). Use for commit creation and pre-commit validation.
+allowed-tools: Bash, Read, Grep
+argument-hint: [review|commit|precommit]
 ---
 
 # Smart Commit Skill
