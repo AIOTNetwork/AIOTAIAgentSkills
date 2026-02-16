@@ -2,7 +2,6 @@
   "hooks": {
     "UserPromptSubmit": [
       {
-        "matcher": "(?i)\\b(commit|commits|committing)\\b",
         "hooks": [
           {
             "type": "command",
