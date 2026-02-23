@@ -15,7 +15,10 @@
     "git",
     "commits",
     "angular-convention",
-    "devops"
+    "devops",
+    "planning",
+    "workflow",
+    "plan-first"
   ],
   "skills": "./skills/"
 }
