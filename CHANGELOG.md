@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-02-23
+
+### Added
+
+- **plancraft** skill: plan-first development workflow with human-in-the-loop review gates
+  - 7 phases: Research → Plan → Annotate → Todo → Implement → Resume → Status
+  - Phase gates enforce human approval before code is written
+  - Annotation syntax (`[NOTE]`, `[REJECT]`, `[CONSTRAINT]`, `[QUESTION]`) for structured feedback
+  - Resume phase for session recovery after context compaction
+  - Git integration: `plancraft/<feature>` branching convention
+  - Language-agnostic with customizable validation rules (TS, Python, Go, Rust examples)
+  - `.plancraft/` directory option for clean project roots
+  - Resolved annotations audit trail
+- Updated README with plancraft documentation
+- Updated plugin keywords and marketplace description
+
 ## [1.2.0] - 2026-01-25
 
 ### Added

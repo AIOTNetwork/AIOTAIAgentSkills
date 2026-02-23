@@ -88,6 +88,53 @@ refactor(core): extract validation logic into separate module
 BREAKING CHANGE: rename authToken to accessToken in config
 ```
 
+### `/plancraft`
+
+Plan-first development workflow. Enforces human-in-the-loop review gates before any code is written.
+
+**Core principle:** Never let the agent write code until you've reviewed and approved a written plan.
+
+**The Flow:**
+
+```
+Research → Plan → Annotate (1-6x) → Todo → Implement → Feedback
+```
+
+**Usage:**
+
+```
+/plancraft research    # Deep-read codebase, write research.md
+/plancraft plan        # Write implementation plan to plan.md
+/plancraft annotate    # Address inline notes in plan.md
+/plancraft todo        # Add granular task checklist to plan.md
+/plancraft implement   # Execute plan on feature branch, track progress
+/plancraft resume      # Recover context after session restart
+/plancraft status      # Show current phase and progress
+```
+
+**Key Features:**
+
+- **Phase gates** — agent stops and waits for human approval at each phase
+- **Annotation cycle** — human adds `> **[NOTE]:**` inline notes, agent refines the plan (1-6 rounds)
+- **Session resilience** — `resume` recovers from context compaction by reading plan.md
+- **Git integration** — works on `plancraft/<feature>` branches, revert = clean slate
+- **Language-agnostic** — customizable validation rules for any language/toolchain
+
+**When to use:** Changes spanning multiple files, >30 min estimated work, architectural decisions, unfamiliar subsystems.
+
+**Annotation types:**
+
+| Prefix | Meaning |
+|--------|---------|
+| `[NOTE]` | General feedback |
+| `[REJECT]` | Remove this section |
+| `[CONSTRAINT]` | Hard rule, don't change |
+| `[QUESTION]` | Agent should answer |
+
+> Methodology inspired by [Boris Tane's Claude Code workflow](https://boristane.com/blog/how-i-use-claude-code/)
+
+---
+
 ## Auto-Trigger Hooks
 
 ### Prompt-Based Trigger
@@ -127,8 +174,10 @@ AIOTAIAgentSkills/
 │   ├── hooks.json           # Hook configuration
 │   └── pre-commit-check.sh  # Pre-commit check script
 ├── skills/
-│   └── smart-commit/
-│       └── SKILL.md         # Smart commit skill
+│   ├── smart-commit/
+│   │   └── SKILL.md         # Smart commit skill
+│   └── plancraft/
+│       └── SKILL.md         # Plan-first dev workflow
 ├── LICENSE
 ├── CHANGELOG.md
 └── README.md
