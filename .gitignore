@@ -1,5 +1,12 @@
 # macos
 .DS_Store
+Thumbs.db
+
+# ide
+.idea/
+.vscode/
+*.swp
+*.swo
 
 # claude
 .claude/settings.local.json
