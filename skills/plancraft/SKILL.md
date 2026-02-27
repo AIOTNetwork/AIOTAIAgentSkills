@@ -1,7 +1,7 @@
 ---
 name: plancraft
 description: Plan-first development workflow. Enforces Research → Plan → Annotate → Implement phases with human-in-the-loop review gates. Never write code until the plan is approved. Use for any non-trivial feature, refactor, or bug investigation.
-allowed-tools: Bash, Read, Write, Edit, Grep
+allowed-tools: Bash, Read, Write, Edit, Grep, Task, TaskCreate, TaskList, TaskUpdate, TaskGet, TeamCreate, TeamDelete, SendMessage
 argument-hint: [research|plan|annotate|todo|implement|resume|status]
 ---
 
@@ -263,6 +263,89 @@ The `> **[NOTE]:**` prefix makes annotations easy to find and distinguish from p
 # Create a feature branch — clean state always available
 git checkout -b plancraft/<feature-name>
 ```
+
+### Team-Based Implementation (Default When Available)
+
+**When agent teams are available, ALWAYS use them.** Do not implement solo when you can delegate to a coordinated team.
+
+#### Step 1: Analyze the todo list and identify required roles
+
+Review the todo list in `plan.md` and determine what specialist roles are needed. Common roles:
+
+| Role | When to use |
+|------|-------------|
+| `frontend-dev` | UI components, styling, client-side logic |
+| `backend-dev` | API endpoints, server logic, database changes |
+| `tester` | Writing and running tests, validation checkpoints |
+| `reviewer` | Code review, checking plan adherence |
+| `infra-dev` | CI/CD, config, deployment changes |
+| `docs-writer` | Documentation, API docs, README updates |
+
+Only spawn roles that the plan actually requires. Don't over-staff — 2-4 agents is typical.
+
+#### Step 2: Create the team and task list
+
+```
+1. Use TeamCreate to create a team named "plancraft-<feature-name>"
+2. Use TaskCreate to create tasks from the todo list in plan.md
+   - Each todo item (or logical group) becomes a task
+   - Set dependencies using addBlockedBy for tasks that depend on others
+3. Spawn teammates using the Task tool with:
+   - team_name: the team name
+   - name: the role name (e.g., "frontend-dev", "backend-dev")
+   - subagent_type: "general-purpose" (for implementation work)
+   - mode: "bypassPermissions" or as appropriate
+```
+
+#### Step 3: Assign tasks and coordinate
+
+- Assign tasks to teammates via `TaskUpdate` with the `owner` parameter
+- Each teammate's prompt must include:
+  - The relevant section of `plan.md` (objective, approach, their specific changes)
+  - The specific tasks they own
+  - Language/framework conventions from research.md
+  - Instruction to mark tasks complete via `TaskUpdate` when done
+  - Instruction to follow the plan **exactly** — no creative decisions or scope creep
+
+#### Step 4: Monitor and coordinate
+
+As team lead:
+- Monitor task progress via `TaskList`
+- Respond to teammate messages (blockers, questions, conflicts)
+- Resolve merge conflicts or task dependencies
+- Ensure validation checkpoints are run
+- Update `plan.md` todo items as tasks complete: `- [ ]` → `- [x]`
+
+#### Step 5: Finalize
+
+When all tasks are complete:
+- Verify all validation checkpoints pass
+- Send shutdown requests to all teammates
+- Clean up team with `TeamDelete`
+- Proceed to commit
+
+#### Team prompt template for teammates:
+
+```
+You are a {role} on a plancraft implementation team.
+
+**Objective:** {from plan.md Objective section}
+**Your tasks:** {list of assigned tasks}
+
+**Rules:**
+- Follow the plan EXACTLY — do not deviate or add features not in the plan
+- Mark tasks complete via TaskUpdate when done
+- If you hit an unexpected issue, message the team lead rather than improvising
+- Run validation commands after each change
+- Check TaskList after completing each task for newly unblocked work
+
+**Context:**
+{relevant sections from plan.md and research.md}
+```
+
+### Solo Implementation (Fallback)
+
+If agent teams are **not available** (e.g., tool restrictions, simple tasks with <3 todo items), implement solo:
 
 ### Implementation rules:
 
