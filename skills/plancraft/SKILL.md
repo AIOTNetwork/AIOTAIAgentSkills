@@ -54,6 +54,24 @@ By default, artifacts go in the **project root**. For teams that prefer a clean 
 
 Set the location once; be consistent. Add `.plancraft/` to `.gitignore` if artifacts shouldn't be committed.
 
+### Definition of Done
+
+Every task must meet ALL criteria before it can pass verification:
+
+**Minimum Bar (non-negotiable):**
+- [ ] Tests pass (existing + new where applicable)
+- [ ] No regressions introduced
+- [ ] Follows codebase conventions
+- [ ] Plan adherence — implements exactly what was specified
+
+**Quality Bar (required for task approval):**
+- [ ] Code is clean — no dead code, no commented-out blocks, no TODOs left behind
+- [ ] Edge cases from research.md are handled
+- [ ] Error paths are covered, not just happy paths
+- [ ] Changes are minimal — no unnecessary refactoring beyond the plan
+
+Both `qa-verifier` and `product-manager` use this definition as their rubric. If a task doesn't meet the minimum bar, it fails. If it meets minimum but not quality, it fails with improvement notes.
+
 ---
 
 ## Phase 1: Research
@@ -127,6 +145,20 @@ Detailed explanation of the implementation strategy.
 - Trade-offs and alternatives considered
 - Risks and mitigation
 
+## Non-Functional Requirements
+<!-- Optional: specify if the task has performance, security, or accessibility implications -->
+- **Performance:** [e.g., "endpoint must respond < 200ms at p95", or "N/A"]
+- **Security:** [e.g., "requires auth, input sanitization", or "N/A"]
+- **Accessibility:** [e.g., "must meet WCAG 2.1 AA", or "N/A"]
+
+## Team Roles
+<!-- Added in Phase 2 when team-based implementation is anticipated -->
+<!-- Review and adjust roles before approving the plan -->
+
+| Role | Justification | Assigned Tasks |
+|------|---------------|----------------|
+| `role-name` | Why this role is needed | Which todo items they'll own |
+
 ## Open Questions
 - Anything that needs human input
 
@@ -135,6 +167,18 @@ Detailed explanation of the implementation strategy.
 
 ## Todo
 <!-- Added in Phase 4 -->
+
+## Quality Metrics
+<!-- Updated during implementation by team lead -->
+
+| Task | Developer | QA Verdict | PM Verdict | Fix Iterations | Notes |
+|------|-----------|------------|------------|----------------|-------|
+
+## Discovered Knowledge
+<!-- Technical insights discovered during implementation — candidates for project documentation -->
+
+## Retrospective
+<!-- Added after implementation completes -->
 ```
 
 ### Key rules:
@@ -143,6 +187,7 @@ Detailed explanation of the implementation strategy.
 - Include **code snippets** showing the real changes, not pseudocode
 - Reference **existing patterns** in the codebase — new code should look like existing code
 - If a reference implementation exists (OSS, another part of the codebase), add it to the **References** section
+- **Populate the Team Roles section** — identify which specialist roles the implementation will need (e.g., `frontend-dev`, `backend-dev`, `tester`). Include a justification for each role so the human can review and adjust before approving. Only propose roles the plan actually requires — don't over-staff
 
 ### ⛔ PHASE GATE: Stop here.
 
@@ -244,6 +289,7 @@ The `> **[NOTE]:**` prefix makes annotations easy to find and distinguish from p
 - Order tasks by dependency (what must happen first)
 - Include **validation checkpoints** (marked with ✅): typecheck, tests, manual verification
 - Estimate total task count for progress tracking
+- **Update the Team Roles table** — fill in the "Assigned Tasks" column now that tasks are defined. The human reviews role-to-task mapping as part of todo approval
 
 ### ⛔ PHASE GATE: Stop here.
 
@@ -268,20 +314,19 @@ git checkout -b plancraft/<feature-name>
 
 **When agent teams are available, ALWAYS use them.** Do not implement solo when you can delegate to a coordinated team.
 
-#### Step 1: Analyze the todo list and identify required roles
+#### Step 1: Use the approved roles from plan.md
 
-Review the todo list in `plan.md` and determine what specialist roles are needed. Common roles:
+The **Team Roles** section in `plan.md` was populated during planning (Phase 2) and refined during todo creation (Phase 4). The human has already reviewed and approved which roles to spawn and their task assignments.
 
-| Role | When to use |
-|------|-------------|
-| `frontend-dev` | UI components, styling, client-side logic |
-| `backend-dev` | API endpoints, server logic, database changes |
-| `tester` | Writing and running tests, validation checkpoints |
-| `reviewer` | Code review, checking plan adherence |
-| `infra-dev` | CI/CD, config, deployment changes |
-| `docs-writer` | Documentation, API docs, README updates |
+Read the Team Roles table from `plan.md` and spawn **only the approved roles**. Do not add or remove roles without human approval.
 
-Only spawn roles that the plan actually requires. Don't over-staff — 2-4 agents is typical.
+**Two roles are mandatory** — every team must include them regardless of what other roles the plan defines:
+
+1. **`qa-verifier`** — Technical quality gate. Reviews completed work, runs validation commands, checks code quality, and sends issues back to developers for iteration.
+2. **`product-manager`** — Product quality gate. After QA passes, verifies the implementation meets the plan's objective, user intent, and acceptance criteria.
+
+No task is truly "complete" until it passes **both** gates: `qa-verifier` first, then `product-manager`.
+
 
 #### Step 2: Create the team and task list
 
@@ -297,6 +342,17 @@ Only spawn roles that the plan actually requires. Don't over-staff — 2-4 agent
    - mode: "bypassPermissions" or as appropriate
 ```
 
+#### Step 2.5: Validate task graph (before spawning teammates)
+
+Before creating any teammates, the team lead must verify:
+- No circular dependencies in `addBlockedBy` chains
+- Every task is assigned to exactly one role from the Team Roles table
+- No role has zero tasks assigned (remove it from the team)
+- Validation checkpoint tasks exist between logical phases
+- Total task count is reasonable for the team size
+
+If any check fails, fix the task graph before spawning teammates. Debugging task dependency issues with a live team is expensive.
+
 #### Step 3: Assign tasks and coordinate
 
 - Assign tasks to teammates via `TaskUpdate` with the `owner` parameter
@@ -306,25 +362,173 @@ Only spawn roles that the plan actually requires. Don't over-staff — 2-4 agent
   - Language/framework conventions from research.md
   - Instruction to mark tasks complete via `TaskUpdate` when done
   - Instruction to follow the plan **exactly** — no creative decisions or scope creep
+- **Do NOT assign verification tasks to `qa-verifier` or `product-manager` upfront** — they pick up work after developers mark tasks as complete (see Step 4)
 
-#### Step 4: Monitor and coordinate
+**Spawning timing:**
+- **Developer roles**: Spawn immediately at team creation
+- **`qa-verifier`**: Spawn when the first developer task is marked complete
+- **`product-manager`**: Spawn when `qa-verifier` approves the first task
 
-As team lead:
+This avoids idle agents burning tokens while developers are still working. The team lead is responsible for spawning these roles at the right time.
+
+#### Step 4: Verify-Iterate loop (two-stage)
+
+This is the core quality mechanism. Every completed task passes through two verification stages:
+
+```
+Developer completes task
+        ↓
+  ┌─ Stage 1: qa-verifier ─┐
+  │  Technical review       │
+  │  Tests, code quality,   │
+  │  plan adherence         │
+  └─────────┬───────────────┘
+            ↓
+     QA Pass? ──No──→ Fix task → Developer → re-review
+            │
+           Yes
+            ↓
+  ┌─ Stage 2: product-manager ─┐
+  │  Product review              │
+  │  Objective met, UX correct,  │
+  │  acceptance criteria         │
+  └─────────┬────────────────────┘
+            ↓
+     PM Pass? ──No──→ Fix task → Developer → Stage 1 again
+            │        (functional fixes go through QA;
+            │         cosmetic fixes skip QA, PM re-reviews directly)
+           Yes
+            ↓
+      Task approved ✓
+```
+
+#### Iteration Budget
+
+Each task has a maximum of **3 full verify-iterate cycles** (developer fix → qa-verifier → product-manager counts as one cycle).
+
+- `qa-verifier` tracks the iteration count per task
+- On the **3rd failure** at either stage, the reviewing role MUST:
+  1. Stop the cycle
+  2. Message the team lead with: task ID, failure history, and what keeps failing
+  3. Team lead decides: re-scope the task, revert the approach, or escalate to the human
+
+**Never allow a 4th iteration without team lead intervention.**
+
+#### Stage 1 — `qa-verifier`
+
+Watch `TaskList` for tasks marked complete by developers. For each completed task, verify:
+
+**1. Build & Type Safety**
+- [ ] Project compiles/builds without errors
+- [ ] Type checking passes
+- [ ] No new compiler/linter warnings introduced
+
+**2. Test Suite**
+- [ ] All existing tests pass (full suite, not just changed files)
+- [ ] New code has test coverage where the plan specifies it
+- [ ] No test files were accidentally modified or deleted
+
+**3. Static Analysis & Linting**
+- [ ] Linter passes with zero new violations
+- [ ] No dead code introduced (unused imports, unreachable branches)
+- [ ] No TODO/FIXME/HACK comments added without tracking
+
+**4. Security (Surface-Level)**
+- [ ] No hardcoded secrets, API keys, or credentials
+- [ ] No new dependencies with known vulnerabilities (if lockfile changed)
+- [ ] Input validation present at system boundaries
+
+**5. Integration & Consistency**
+- [ ] Changes work across files — no broken imports, missing exports, or interface mismatches
+- [ ] Follows existing codebase conventions
+- [ ] No unintended side effects on other features
+
+**6. Plan Adherence**
+- [ ] Implementation matches plan.md specification exactly
+- [ ] No scope creep — no features or changes beyond what the plan describes
+- [ ] Validation checkpoints from the todo list are satisfied
+
+**7. Non-Functional Requirements (if specified in plan.md)**
+- [ ] Performance requirements met
+- [ ] Security requirements satisfied
+- [ ] Accessibility requirements met
+
+**On FAIL:** Create a fix task via `TaskCreate` with file, line, and what's wrong. Assign it back to the original developer. Set `addBlockedBy` so downstream tasks wait.
+
+**On PASS:** Message `product-manager` that the task is ready for product review.
+
+#### Stage 2 — `product-manager`
+
+Pick up tasks that `qa-verifier` has approved. For each QA-approved task, verify:
+- **Objective alignment** — does this implementation achieve what plan.md set out to do?
+- **Acceptance criteria** — are all requirements from the plan satisfied?
+- **Completeness** — no missing edge cases, user flows, or functionality gaps
+- **Consistency** — changes are coherent with the rest of the system's behavior
+- **Non-functional requirements** — if plan.md specifies targets, verify they are met
+
+**On FAIL:** Classify the fix:
+- **`cosmetic`** — naming, labels, copy, formatting → does NOT require QA re-review. Product-manager re-reviews directly after developer completes it.
+- **`functional`** — logic, behavior, missing functionality → MUST go through Stage 1 again after developer completes it.
+
+Create a fix task, assign to original developer, message team lead.
+
+**On PASS:** Message the team lead confirming final approval.
+
+#### Regression Protocol
+
+When `qa-verifier` reviews a **fix task** (iteration >= 2), they MUST:
+1. Re-run the **full** validation suite, not just tests related to the current task
+2. Check `git diff` against all previously approved tasks to identify overlapping file changes
+3. If a fix introduces a regression in a previously approved task:
+   - Create a new fix task that addresses the regression
+   - Message the team lead immediately: "Regression detected — Task #{X} fix broke previously approved Task #{Y}"
+   - Block downstream tasks until the regression is resolved
+
+#### Communication Protocol
+
+All inter-role messages MUST follow this format:
+
+**QA → PM (task approved):**
+> "QA PASS Task #{id}: {task subject}. Ready for product review."
+
+**PM → Team Lead (task fully approved):**
+> "PM PASS Task #{id}: {task subject}. Both gates passed."
+
+**QA/PM → Developer (rejection):**
+> Created fix task #{new_id} for Task #{original_id}: {one-line summary}. Fix for original task #{original_id}.
+
+**Any role → Team Lead (escalation):**
+> "ESCALATION Task #{id}: {reason}. Iteration count: {N}/3."
+
+#### Team Lead Responsibilities
+
 - Monitor task progress via `TaskList`
 - Respond to teammate messages (blockers, questions, conflicts)
 - Resolve merge conflicts or task dependencies
-- Ensure validation checkpoints are run
-- Update `plan.md` todo items as tasks complete: `- [ ]` → `- [x]`
+- Update `plan.md` todo items only after **both stages pass**: `- [ ]` → `- [x]`
+- Update the **Quality Metrics** table in plan.md after each task is fully approved
+
+**Escalation triggers — pause and inform the human when:**
+- Any single task requires more than 3 fix iterations
+- A developer and verifier disagree on whether a fix is needed
+- The implementation requires a change to the approved plan
+- Total fix tasks created exceed 50% of the original task count
+- Any teammate reports being blocked for more than 2 task cycles
+
+**Deadlock detection:**
+- If a task has been in `in_progress` status for longer than all other tasks combined, message the owner to check status
+- If a teammate has not responded after a check-in, consider reassigning the task or spawning a replacement
+- If QA and PM are both idle but tasks remain incomplete, verify the communication chain isn't broken
 
 #### Step 5: Finalize
 
-When all tasks are complete:
-- Verify all validation checkpoints pass
+When all tasks are **approved by both `qa-verifier` and `product-manager`**:
+- Confirm all validation checkpoints pass (final full run)
 - Send shutdown requests to all teammates
 - Clean up team with `TeamDelete`
 - Proceed to commit
 
-#### Team prompt template for teammates:
+#### Team prompt template for developer teammates:
 
 ```
 You are a {role} on a plancraft implementation team.
@@ -338,9 +542,76 @@ You are a {role} on a plancraft implementation team.
 - If you hit an unexpected issue, message the team lead rather than improvising
 - Run validation commands after each change
 - Check TaskList after completing each task for newly unblocked work
+- When qa-verifier or product-manager creates a fix task assigned to you, prioritize it
 
 **Context:**
 {relevant sections from plan.md and research.md}
+```
+
+#### Team prompt template for qa-verifier:
+
+```
+You are the qa-verifier on a plancraft implementation team.
+
+**Objective:** {from plan.md Objective section}
+**Plan:** Read plan.md thoroughly — you are the technical quality enforcer.
+**Definition of Done:** See the Definition of Done section — every task must meet both minimum and quality bars.
+
+**Your workflow:**
+1. Watch TaskList for tasks marked complete by developers
+2. For each completed task, run through the verification checklist (Build & Type Safety, Test Suite, Static Analysis, Security, Integration, Plan Adherence, Non-Functional Requirements)
+3. Track iteration count per task (max 3 cycles before escalation)
+4. If issues found:
+   - Create a fix task via TaskCreate — include file, line, and what's wrong
+   - Assign it to the original developer via TaskUpdate
+   - Message: "QA FAIL Task #{id}: {summary}. Iteration {N}/3."
+5. If task passes:
+   - Message product-manager: "QA PASS Task #{id}: {task subject}. Ready for product review."
+6. For FIX tasks (iteration >= 2): re-run the FULL validation suite and check for regressions against previously approved tasks
+7. Check TaskList again for more completed work
+8. When you discover a gotcha or non-obvious behavior, add it to the Discovered Knowledge section in plan.md
+
+**Rules:**
+- Never fix code yourself — always send it back to the developer
+- Be specific in fix tasks: include the file, line, and what's wrong
+- Run the FULL validation suite, not just the changed files
+- A task is only done when it passes your review AND product-manager's review
+- After all tasks pass, do a final integration check across the whole changeset
+- On 3rd failure for any task, STOP and escalate to team lead
+```
+
+#### Team prompt template for product-manager:
+
+```
+You are the product-manager on a plancraft implementation team.
+
+**Objective:** {from plan.md Objective section}
+**Plan:** Read plan.md thoroughly — you are the product quality enforcer.
+**Definition of Done:** See the Definition of Done section — verify the quality bar is met from a product perspective.
+
+**Your workflow:**
+1. Pick up tasks that qa-verifier has approved (they will message you: "QA PASS Task #{id}...")
+2. For each QA-approved task, verify:
+   - Objective alignment: does the implementation achieve what plan.md set out to do?
+   - Acceptance criteria: are all requirements from the plan satisfied?
+   - Completeness: no missing edge cases, user flows, or functionality gaps
+   - Consistency: changes are coherent with the rest of the system's behavior
+   - Non-functional requirements: if plan.md specifies targets, verify they are met
+3. If issues found, classify the fix:
+   - **cosmetic** (naming, labels, copy, formatting): skip QA re-review, you re-review directly after developer fixes
+   - **functional** (logic, behavior, missing functionality): must go through qa-verifier again
+   - Create a fix task via TaskCreate, assign to original developer
+   - Message: "PM FAIL Task #{id}: {summary}. Fix type: cosmetic|functional. Iteration {N}/3."
+4. If task passes:
+   - Message team lead: "PM PASS Task #{id}: {task subject}. Both gates passed."
+5. Check TaskList again for more QA-approved work
+6. When you discover a gotcha or product insight, add it to the Discovered Knowledge section in plan.md
+
+**Rules:**
+- Never fix code yourself — always send it back to the developer
+- Focus on WHAT the code does, not HOW — leave code quality to qa-verifier
+- Verify against the plan's Objective and acceptance criteria, not personal preferences
+- On 3rd failure for any task, STOP and escalate to team lead
 ```
 
 ### Solo Implementation (Fallback)
@@ -409,14 +680,55 @@ git checkout .
 
 ### After completion:
 
-```bash
-# Commit with a meaningful message
-git add -A
-git commit -m "feat(scope): description — plancraft implementation"
+1. **Final integration check** — run the full test suite one more time against the complete changeset
+2. **Complete retrospective** (mandatory for team implementation) — see Phase 5.5
+3. **Review discovered knowledge** — decide with the human what to persist to project docs
+4. **Commit:**
+   ```bash
+   # Stage specific files (avoid git add -A)
+   git add [specific files from the plan]
+   git commit -m "feat(scope): description — plancraft implementation"
+   ```
+5. **Artifact cleanup** — ask the human about plan.md and research.md disposition
 
-# Optional: squash if many intermediate commits
-git rebase -i main
+---
+
+## Phase 5.5: Retrospective (Post-Implementation)
+
+**Trigger:** All tasks approved by both qa-verifier and product-manager, before final commit.
+
+**Goal:** Capture what worked, what didn't, and what to change for next time.
+
+### What to do:
+
+1. The team lead reviews the full implementation history:
+   - How many fix tasks were created? By whom? For what reasons?
+   - Were there any tasks that required more than 2 iterations?
+   - Did the plan need to be revised during implementation?
+
+2. Write a brief retrospective to the **Retrospective** section of `plan.md`:
+
+```markdown
+## Retrospective
+
+### Quality Summary
+- Tasks completed: N
+- Fix iterations required: N (by qa-verifier), N (by product-manager)
+- Tasks requiring >2 iterations: [list]
+
+### What Worked
+- [specific things that went smoothly]
+
+### What Didn't Work
+- [specific problems encountered]
+
+### Lessons for Next Time
+- [actionable improvements for future plancraft sessions]
 ```
+
+3. If recurring patterns emerge (e.g., "tests were always missing for edge cases"), suggest updates to the project's CLAUDE.md or documentation to prevent recurrence.
+
+**This phase is mandatory for team-based implementation. Skip only for solo implementation of <3 tasks.**
 
 ---
 
