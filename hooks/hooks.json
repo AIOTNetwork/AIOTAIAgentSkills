@@ -19,6 +19,16 @@
             "command": "${CLAUDE_PLUGIN_ROOT}/hooks/pre-commit-check.sh"
           }
         ]
+      },
+      {
+        "matcher": "mcp__figma__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/save-figma.sh",
+            "timeout": 30
+          }
+        ]
       }
     ]
   }
