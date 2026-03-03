@@ -1,12 +1,12 @@
-# OS files
+# macos
 .DS_Store
 Thumbs.db
 
-# IDE
+# ide
 .idea/
 .vscode/
 *.swp
 *.swo
 
-# Local settings
+# claude
 .claude/settings.local.json
