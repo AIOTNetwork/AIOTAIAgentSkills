@@ -26,4 +26,4 @@ description: use this when asked to research, explore, or understand something
 
 # Output 🔑
 
-- write `research.md` to `./claude/temp`
+- write `research.md` to `.claude/temp`

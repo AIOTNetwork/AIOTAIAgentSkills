@@ -20,6 +20,8 @@ description: use this when asked to write or generate a technical document for a
   ✓ follow template `idea.md`
 - on define a skill
   ✓ follow template `skill.md`
+- on define a review
+  ✓ follow template `review.md`
 - on define test cases
   ✓ follow template `test.md`
 - on define any other document

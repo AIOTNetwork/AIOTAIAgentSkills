@@ -7,11 +7,13 @@ description: use this when writing or modifying frontend code
 
 - temp files are in `.claude/temp/`
 - before working
+  ✓ read temp `idea.md`
   ✓ read temp `change.md`
+  ✓ read temp `figma.md` (if exists)
   ✓ read temp `stack.md` (if exists)
   ✓ read temp `flow.md` (if exists)
   ✓ read temp `api.md` (if exists)
-  ✓ read temp `structure.md` (if exists)
+  ✓ read temp `structure.md` (if exists)  
 - after working
   ✓ write test cases based on temp `test.md`
 

@@ -16,3 +16,7 @@ description: use this when asked to fix or build a feature
 - `Task` — what needs to be done?
 - `Start From` — which file or screen to start from?
 - `Reference` — any figma, swagger, or link?
+
+# Output 🔑
+
+- write `idea.md` to `.claude/temp` (if not exist)

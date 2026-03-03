@@ -1,20 +1,22 @@
 # Hierarchy 🔑
 
-```
+```bash
 ├── packages/lib-share/
 │   ├── types/
-│   │   └── auth.ts
+│   │   └── auth.ts (modified)
 │   ├── apis/auth/
-│   │   └── postLogin.ts
+│   │   └── postLogin.ts (modified)
 │   ├── utils/
-│   │   └── auth.ts
+│   │   └── auth.ts (new)
 │   └── constants/
-│       └── cacheKey.ts
+│       └── cacheKey.ts (modified)
 ├── apps/broker/
 │   ├── components/login/
-│   │   └── LoginForm.tsx
+│   │   └── LoginForm.tsx (modified)
+│   ├── public/images/
+│   │   ├── icon-check-circle.svg (new - download from figma)
 │   └── messages/
-│       ├── en.json
-│       ├── zhcn.json
-│       └── zhhk.json
+│       ├── en.json (modified)
+│       ├── zhcn.json (modified)
+│       └── zhhk.json (modified)
 ```

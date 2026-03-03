@@ -6,6 +6,9 @@ description: use this when asked to commit or stage changes
 # Commit 🔑
 
 - MUST use [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
+  ✓ don't write commit message
+  ✓ don't add co-author
+  ✓ prefer lowercase subject, avoid special characters
 ```bash
 feat(auth)!: [APP-42] JWT on login endpoint
 ```
