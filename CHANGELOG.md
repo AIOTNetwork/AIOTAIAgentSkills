@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-03-03
+
+### Added
+
+- **plancraft**: self-iterating quality engine with two-stage verification
+  - Definition of Done with minimum and quality bars as verification rubric
+  - Two-stage verify-iterate loop: `qa-verifier` (technical) → `product-manager` (product)
+  - 7-category QA verification checklist (build, tests, lint, security, integration, plan adherence, NFRs)
+  - Cosmetic vs functional fix classification — cosmetic PM fixes skip QA re-review
+  - Iteration budget (max 3 cycles per task) with escalation triggers
+  - Structured communication protocol (QA PASS/FAIL, PM PASS/FAIL message formats)
+  - Regression protocol for fix tasks with full suite re-runs
+  - Staggered agent spawning (QA/PM spawn when work is ready, not at team creation)
+  - Task graph validation step (Step 2.5) before spawning teammates
+  - Deadlock detection checklist for team lead
+  - Human-reviewable Team Roles section in plan.md template
+  - Quality Metrics table for tracking verdicts and fix iterations per task
+  - Phase 5.5 Retrospective for post-implementation learning
+  - Discovered Knowledge section for capturing technical insights during implementation
+  - Non-Functional Requirements section in plan.md (performance, security, accessibility)
+
 ## [1.3.1] - 2026-02-27
 
 ### Added
