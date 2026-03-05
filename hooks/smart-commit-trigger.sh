@@ -10,8 +10,16 @@
 INPUT=$(cat)
 PROMPT=$(echo "$INPUT" | jq -r '.prompt // empty')
 
-# Only trigger for commit-related keywords (case-insensitive)
-if ! echo "$PROMPT" | grep -iqE '\b(commit|commits|committing)\b'; then
+# Only trigger when the user is explicitly asking to commit (not just mentioning the word)
+# Match: "commit", "commit this", "commit changes", "commit with", "smart-commit", "/commit"
+# Skip: "commit message format", "commit convention", "the commit", "a commit"
+# The prompt must be short (under 100 chars) or start with a commit action word
+PROMPT_LEN=${#PROMPT}
+if [ "$PROMPT_LEN" -gt 100 ]; then
+  # Long prompts are likely discussions, not commit requests
+  exit 0
+fi
+if ! echo "$PROMPT" | grep -iqE '(^|\s)(commit|commits|committing|\/commit|\/smart-commit)\b'; then
   exit 0
 fi
 
