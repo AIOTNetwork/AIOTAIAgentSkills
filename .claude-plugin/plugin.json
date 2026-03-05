@@ -1,6 +1,6 @@
 {
   "name": "aiot-ai-agent-skills",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "A collection of Claude Code skills for AI-assisted development workflows",
   "author": {
     "name": "AIOTNetwork",

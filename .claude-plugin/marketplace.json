@@ -9,7 +9,7 @@
       "name": "smart-commit",
       "source": "./skills/smart-commit",
       "description": "AI-powered git workflow assistant. Generates conventional commit messages and runs pre-commit checks (lint, format, test).",
-      "version": "1.4.2",
+      "version": "1.4.3",
       "author": {
         "name": "AIOTNetwork"
       },
@@ -19,7 +19,7 @@
       "name": "plancraft",
       "source": "./skills/plancraft",
       "description": "Plan-first development workflow. Research → Plan → Annotate → Implement with human-in-the-loop review gates. Never write code until the plan is approved.",
-      "version": "1.4.2",
+      "version": "1.4.3",
       "author": {
         "name": "AIOTNetwork"
       },
@@ -29,7 +29,7 @@
       "name": "aiot-ai-agent-skills",
       "source": "./",
       "description": "Full bundle: smart-commit + plancraft. AI-powered development workflow skills for Claude Code.",
-      "version": "1.4.2",
+      "version": "1.4.3",
       "author": {
         "name": "AIOTNetwork"
       },
