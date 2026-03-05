@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.1] - 2026-03-04
+
+### Changed
+
+- **plancraft**: restructure SKILL.md with progressive disclosure (845 → 260 lines)
+  - Split team workflow, prompt templates, and plan template into `references/`
+  - Fix invalid frontmatter fields (`allowed-tools`, `argument-hint`)
+  - Enrich description with trigger keywords for better skill activation
+- **smart-commit**: restructure SKILL.md with progressive disclosure (489 → 133 lines)
+  - Split pre-commit workflow and edge cases/examples into `references/`
+  - Fix invalid frontmatter fields
+  - Condense Angular commit convention boilerplate
+  - Enrich description with trigger keywords
+
+### Removed
+
+- Empty `sprite-gen` skill directory
+
 ## [1.4.0] - 2026-03-03
 
 ### Added
