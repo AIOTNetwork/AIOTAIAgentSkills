@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.2] - 2026-03-06
+
+### Fixed
+
+- **smart-commit hook**: replace crude 100-char length check with multi-signal trigger detection
+  - Slash commands (`/commit`, `/smart-commit`) always trigger immediately
+  - Position-based: "commit" must be an action word near the start, not a discussion mention
+  - Git state: only trigger when there are actual changes to commit
+  - Skip when "commit" is preceded by articles/prepositions ("the commit", "about commits")
+
 ## [1.4.1] - 2026-03-04
 
 ### Changed
