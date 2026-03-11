@@ -1,7 +1,5 @@
 # Team-Based Implementation Workflow
 
-**When agent teams are available, ALWAYS use them.** Do not implement solo when you can delegate to a coordinated team.
-
 ## Step 1: Use the approved roles from plan.md
 
 The **Team Roles** section in `plan.md` was populated during planning (Phase 2) and refined during todo creation (Phase 4). The human has already reviewed and approved which roles to spawn and their task assignments.
