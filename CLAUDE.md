@@ -9,11 +9,13 @@ When committing and pushing changes, always update all 3 version files in sync b
 3. `CHANGELOG.md` — new entry following [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format
 
 Version bumps follow [Semantic Versioning](https://semver.org/):
+
 - **Patch** (x.x.1): bug fixes, hook improvements
 - **Minor** (x.1.0): new features, new skill capabilities
 - **Major** (1.0.0): breaking changes
 
 After pushing, consumers update via:
+
 ```
 /plugin marketplace update aiot-skills
 /plugin update aiot-ai-agent-skills@aiot-skills
@@ -33,9 +35,3 @@ Skills follow the [skill-creator](https://github.com/anthropics/skills) best pra
 Use [Angular Commit Convention](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit): `<type>(<scope>): <subject>`
 
 Types: `feat`, `fix`, `docs`, `build`, `refactor`, `test`, `style`, `perf`, `ci`
-
-## Plancraft Teams
-
-When using the plancraft skill with agent teams, always include mandatory roles:
-- `qa-verifier` — technical quality gate
-- `product-manager` — product quality gate
