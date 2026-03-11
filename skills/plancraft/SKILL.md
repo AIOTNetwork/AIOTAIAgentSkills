@@ -150,11 +150,13 @@ Rules:
 
 **Goal:** Execute the plan mechanically. No creative decisions — those were made in planning.
 
+**⚠️ MANDATORY RULE:** If the plan defines Team Roles and the Agent tool is available, you **MUST** use team-based implementation. Do not implement solo when agent teams can be leveraged. Solo implementation is only a fallback when agents are unavailable or the task has fewer than 3 todo items.
+
 ```bash
 git checkout -b plancraft/<feature-name>
 ```
 
-### Team-Based Implementation (Default)
+### Team-Based Implementation (Default — Required when Agent tool is available)
 
 See [references/team-workflow.md](references/team-workflow.md) for the full team workflow including:
 - Role spawning from approved plan.md Team Roles
@@ -258,3 +260,4 @@ If recurring patterns emerge, suggest updates to the project's CLAUDE.md or docu
 - **Patch bad approaches** → revert and re-scope instead
 - **Add features not in the plan** → scope creep
 - **Rely on chat context** → plan.md is the truth
+- **Implement solo when agents are available** → always use team-based implementation when the Agent tool is available and the plan has team roles
