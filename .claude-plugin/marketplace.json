@@ -9,7 +9,7 @@
       "name": "smart-commit",
       "source": "./skills/smart-commit",
       "description": "AI-powered git workflow assistant. Generates conventional commit messages and runs pre-commit checks (lint, format, test).",
-      "version": "1.4.5",
+      "version": "1.6.0",
       "author": {
         "name": "AIOTNetwork"
       },
@@ -19,7 +19,17 @@
       "name": "plancraft",
       "source": "./skills/plancraft",
       "description": "Plan-first development workflow. Research → Plan → Annotate → Implement with human-in-the-loop review gates. Never write code until the plan is approved.",
-      "version": "1.4.5",
+      "version": "1.6.0",
+      "author": {
+        "name": "AIOTNetwork"
+      },
+      "license": "MIT"
+    },
+    {
+      "name": "pixijs",
+      "source": "./skills/pixijs",
+      "description": "Build high-performance HTML5 games with PixiJS 8.x. Covers game architecture, scene management, input systems, collision, physics, tilemaps, audio, particles, and v8 ecosystem libraries.",
+      "version": "1.6.0",
       "author": {
         "name": "AIOTNetwork"
       },
@@ -28,8 +38,8 @@
     {
       "name": "aiot-ai-agent-skills",
       "source": "./",
-      "description": "Full bundle: smart-commit + plancraft. AI-powered development workflow skills for Claude Code.",
-      "version": "1.4.5",
+      "description": "Full bundle: smart-commit + plancraft + pixijs. AI-powered development workflow skills for Claude Code.",
+      "version": "1.6.0",
       "author": {
         "name": "AIOTNetwork"
       },

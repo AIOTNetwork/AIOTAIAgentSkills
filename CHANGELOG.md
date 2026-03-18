@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-03-17
+
+### Changed
+
+- **pixijs**: rewrite skill for high-performance HTML5 game development
+  - SKILL.md restructured as game development workflow guide (bootstrap, scenes, input, camera, collision, pooling)
+  - New `references/game-architecture.md` — scene management, input system, camera, collision, spatial hash, object pooling, FSM, entity pattern
+  - New `references/ecosystem.md` — integration guides for @pixi/sound, pixi-viewport, @pixi/tilemap, @pixi/ui, @pixi/particle-emitter, Matter.js, Spine v8, pixi-filters
+  - Rewritten `references/performance.md` — game-focused: draw call budgets, fixed timestep, spatial partitioning, ParticleContainer, memory lifecycle, mobile targets, profiling
+  - Updated `references/api-patterns.md` — added AnimatedSprite and ParticleContainer v8 sections
+  - Updated description triggers with game-specific keywords (HTML5 game, collision, tilemap, camera, pooling, etc.)
+
+## [1.5.0] - 2026-03-17
+
+### Added
+
+- **pixijs**: new skill for building 2D graphics, games, and animations with PixiJS 8.x
+  - Core workflow: app init, scene graph, render loop, sprites, graphics, text, filters, interaction
+  - Reference guides: full API patterns, performance optimization, v7→v8 migration
+  - Covers WebGL/WebGPU rendering, asset management, custom shaders, Spine integration
+
 ## [1.4.5] - 2026-03-12
 
 ### Fixed
