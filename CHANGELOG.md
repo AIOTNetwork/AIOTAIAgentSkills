@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-03-17
+
+### Added
+
+- **pixijs-hud**: new skill for responsive game HUD/UI design with PixiJS 8.x
+  - HUD architecture: layered rendering, static/dynamic separation, render groups
+  - Screen scaling: scale factor, letterbox, viewport fill strategies
+  - Anchor-based positioning, safe zones for notched displays, touch-friendly sizing
+  - 10 HUD component patterns: health bar, score, minimap, dialog box, inventory grid, touch joystick, damage numbers, cooldown indicator, toast notifications, FPS counter
+  - @pixi/layout flexbox patterns for menus, settings panels, HUD bars
+  - Resolution independence, multi-resolution assets, breakpoint-based layouts
+
 ## [1.6.0] - 2026-03-17
 
 ### Changed
