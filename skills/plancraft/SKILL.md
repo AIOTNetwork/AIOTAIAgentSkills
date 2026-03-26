@@ -150,13 +150,24 @@ Rules:
 
 **Goal:** Execute the plan mechanically. No creative decisions — those were made in planning.
 
-**⚠️ MANDATORY RULE:** If the plan defines Team Roles and the Agent tool is available, you **MUST** use team-based implementation. Do not implement solo when agent teams can be leveraged. Solo implementation is only a fallback when agents are unavailable or the task has fewer than 3 todo items.
+### Pre-Flight Check (MUST run before any implementation)
+
+**Before writing any code, execute this checklist in order:**
+
+1. **Read `plan.md` Team Roles table** — does the plan define team roles?
+2. **Check Agent tool availability** — can you spawn agents?
+3. **Decision:**
+   - If Team Roles exist AND Agent tool is available → **MUST use Team-Based Implementation below. No exceptions.**
+   - If Team Roles exist but Agent tool is unavailable → Solo fallback (log why agents were unavailable)
+   - If no Team Roles defined AND fewer than 3 todo items → Solo implementation
+
+> ⛔ **HARD RULE:** Never skip this check. Never implement solo when the plan has Team Roles and the Agent tool is available. This is the #1 most common mistake — defaulting to solo because it's easier. Always spin up the team.
 
 ```bash
 git checkout -b plancraft/<feature-name>
 ```
 
-### Team-Based Implementation (Default — Required when Agent tool is available)
+### Team-Based Implementation (Default — Required when plan has Team Roles)
 
 See [references/team-workflow.md](references/team-workflow.md) for the full team workflow including:
 - Role spawning from approved plan.md Team Roles
